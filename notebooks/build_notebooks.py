@@ -209,9 +209,9 @@ for (name, (x, y)), c in zip(points.items(), ['tab:blue', 'tab:cyan', 'tab:green
     st = tri.bands.sel(x=x, y=y, method='nearest')
     ax.plot(sf.wl.astype(float), sf, 'o--', c=c, alpha=.5, mfc='none', label=f'{name} - S2')
     ax.plot(st.wl.astype(float), st, 's', c=c, ms=8, label=f'{name} - TRISHNA-like')
-ax.set_xscale('log'); ax.set_xticks([443, 560, 665, 865, 945, 1375, 1610, 2190])
+ax.set_xscale('log'); ax.set_xticks([443, 560, 665, 865, 945, 1375, 1610, 2190]); ax.xaxis.set_minor_locator(plt.NullLocator())
 ax.get_xaxis().set_major_formatter(plt.ScalarFormatter())
-ax.set_xlabel('wavelength (nm)'); ax.set_ylabel('TOA reflectance'); ax.legend(fontsize=8, ncol=2)
+ax.set_xlabel('wavelength (nm)'); ax.set_ylabel('TOA reflectance'); ax.legend(ncol=2)
 '''),
         md('''
 ## 4. Add TRISHNA radiometric noise
@@ -351,7 +351,7 @@ for j, w in enumerate(common):
 for i, t in enumerate(['GRS, all S2 bands', 'GRS, TRISHNA bands', 'difference (%)']):
     axs[i, 0].set_ylabel(t)
 for ax in axs.ravel():
-    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_xticks([]); ax.set_yticks([]); ax.minorticks_off()
 fig.tight_layout()
 fig.savefig(THUMB_DIR / 'grs_trishna_bands.png', dpi=60)
 '''),
@@ -469,7 +469,7 @@ for b, c in [('NIR', 'tab:red'), ('WV', 'tab:red')]:
     ax.fill_between(TRISHNA.srf.wl, TRISHNA.srf.sel(band=b), color=c, alpha=.3, label=f'TRISHNA {b}')
 for b in ['B8A', 'B9']:
     ax.fill_between(s2.srf.wl, s2.srf.sel(band=b), color='tab:blue', alpha=.3, label=f'S2 {b}')
-ax.set_xlim(820, 1000); ax.set_xlabel('wavelength (nm)'); ax.legend(fontsize=8, loc='center left', bbox_to_anchor=(1.01, 0.5))
+ax.set_xlim(820, 1000); ax.set_xlabel('wavelength (nm)'); ax.legend(loc='center left', bbox_to_anchor=(1.01, 0.5))
 fig.tight_layout()
 fig.savefig(THUMB_DIR / 'water_vapor_trishna.png', dpi=70)
 '''),
@@ -483,7 +483,7 @@ for s, ls in [('TRISHNA', '-'), ('S2', '--')]:
 c = compare_trishna_s2(3.)
 for s, ls in [('TRISHNA', '-'), ('S2', '--')]:
     c.dW_for_1pct_ratio_error.sel(sensor=s).plot(ax=axs[1], ls=ls, c='k', label=s)
-axs[0].set_ylabel('R$_{abs}$ / R$_{win}$'); axs[0].legend(fontsize=8, ncol=2)
+axs[0].set_ylabel('R$_{abs}$ / R$_{win}$'); axs[0].legend(ncol=2)
 axs[1].set_ylabel('TCWV error for a 1 % ratio error (kg m$^{-2}$)'); axs[1].legend()
 for ax in axs: ax.set_xlabel('TCWV W (kg m$^{-2}$)'); ax.set_title('')
 '''),
@@ -502,7 +502,7 @@ for rho, c in zip([0.3, 0.05, 0.01], ['tab:green', 'tab:olive', 'tab:blue']):
     for s, ls in [('TRISHNA', '-'), ('S2', '--')]:
         noise_error(s, rho, m=3., sza=48.19).plot(ax=ax, c=c, ls=ls, label=f'{s}, rho={rho}')
 ax.set_yscale('log'); ax.set_ylabel('1-sigma TCWV error (kg m$^{-2}$)'); ax.set_xlabel('TCWV (kg m$^{-2}$)')
-ax.legend(fontsize=8, ncol=2); ax.grid(alpha=.3); ax.set_title('')
+ax.legend(ncol=2); ax.grid(alpha=.3); ax.set_title('')
 '''),
         md('''
 ## 4. Application to a Sentinel-2 image (865/945 nm)
@@ -757,10 +757,10 @@ fig, axs = plt.subplots(1, 2, figsize=(14, 5.5))
 for ax, sens in zip(axs, [S2W, TRW]):
     sep = owt.separability(ref, sens).to_pandas()
     im = ax.imshow(sep, vmin=0, vmax=30, cmap='magma')
-    ax.set_xticks(range(10), sep.columns); ax.set_yticks(range(10), sep.index)
+    ax.set_xticks(range(10), sep.columns); ax.set_yticks(range(10), sep.index); ax.minorticks_off()
     for i in range(10):
         for j in range(10):
-            ax.text(j, i, f'{sep.iloc[i, j]:.0f}', ha='center', va='center', fontsize=7,
+            ax.text(j, i, f'{sep.iloc[i, j]:.0f}', ha='center', va='center', fontsize=10,
                     color='w' if sep.iloc[i, j] < 15 else 'k')
     ax.set_title(sens.name)
 fig.colorbar(im, ax=axs, shrink=.8, label='spectral angle (deg)')
@@ -781,6 +781,7 @@ noisy, conf_noisy = owt.benchmark(sensors, n=300, noise=noise)
 ax = (100 * pd.concat({'noise-free': clean.loc['all'], 'with noise': noisy.loc['all']}, axis=1)).plot.bar(
     figsize=(9, 4), rot=0)
 ax.set_ylabel('agreement with hyperspectral OWT (%)'); ax.set_ylim(50, 100); ax.grid(axis='y', alpha=.3)
+ax.xaxis.set_minor_locator(plt.NullLocator())
 (100 * noisy).round(0).T
 '''),
         code('''
@@ -788,11 +789,11 @@ fig, axs = plt.subplots(1, 2, figsize=(14, 5.5))
 for ax, n in zip(axs, ['S2', 'TRISHNA']):
     c = conf_noisy[n]
     ax.imshow(100 * c.values, vmin=0, vmax=100, cmap='Blues')
-    ax.set_xticks(range(c.shape[1]), c.columns); ax.set_yticks(range(c.shape[0]), c.index)
+    ax.set_xticks(range(c.shape[1]), c.columns); ax.set_yticks(range(c.shape[0]), c.index); ax.minorticks_off()
     for i in range(c.shape[0]):
         for j in range(c.shape[1]):
             if c.iloc[i, j] > 0.02:
-                ax.text(j, i, f'{100 * c.iloc[i, j]:.0f}', ha='center', va='center', fontsize=7)
+                ax.text(j, i, f'{100 * c.iloc[i, j]:.0f}', ha='center', va='center', fontsize=10)
     ax.set_xlabel(f'{n} class'); ax.set_ylabel('hyperspectral class'); ax.set_title(f'{n} (with noise), %')
 '''),
         md('''
@@ -840,8 +841,8 @@ agree = (a == b).where(a.notnull())
 axs[2].imshow(agree, cmap='RdYlGn', vmin=0, vmax=1, interpolation='nearest')
 axs[2].set_title(f'agreement: {100 * float(agree.mean()):.1f} %  (merged classes: '
                  f'{100 * float((owt.merge_classes(a) == owt.merge_classes(b)).where(a.notnull()).mean()):.1f} %)')
-cb = fig.colorbar(im, ax=axs[:2], shrink=.6, ticks=range(10)); cb.ax.set_yticklabels(labels)
-for ax in axs: ax.set_xticks([]); ax.set_yticks([])
+cb = fig.colorbar(im, ax=axs[:2], shrink=.6, ticks=range(10)); cb.ax.set_yticklabels(labels); cb.ax.minorticks_off()
+for ax in axs: ax.set_xticks([]); ax.set_yticks([]); ax.minorticks_off()
 '''),
         code('''
 ok = a.notnull().values
@@ -890,7 +891,7 @@ cov.style.map(lambda v: 'background-color: #c8e6c9' if v is True else
 Example: the Loire estuary and plume (tile T30TWT, 2017-04-12), from clear coastal waters to the
 very turbid estuary. The GRS L2A product is a Zarr pyramid: level 0 is the 20 m grid.'''),
         code('''
-from trishna_tbx.io import open_grs_l2a, water_mask, to_60m
+from trishna_tbx.io import open_grs_l2a, parse_window, water_mask, to_60m
 ds = open_grs_l2a(L2A_EXAMPLE, L2A_EXAMPLE_WINDOW, level=0)
 date = ds.time.values
 rrs = to_60m(ds.Rrs.where(water_mask(ds))).load()
@@ -905,23 +906,37 @@ prod_t = algorithms.run_all(rrs_t, S2T)
 print('S2 only :', sorted(set(prod_s2) - set(prod_t)))
 print('both    :', sorted(prod_t))
 '''),
+        md('''
+For comparison, the Chl-a of the Sentinel-2 L2B product of GRSl2bgen on the same image:
+`Chla_OWTblend_Ta2025`, which blends the algorithms of the two closest optical water types of
+Spyrakos et al. (2018) with the recipe of Tavares et al. (2025). These algorithms use the red edge
+(Gons, NDCI, Gilerson) or 443 nm: this product cannot be computed with TRISHNA bands.'''),
+        code('''
+l2b = xr.open_zarr(L2B_EXAMPLE + '/0', consolidated=False).isel(parse_window(L2A_EXAMPLE_WINDOW))
+chl_blend = to_60m(l2b['Chla_OWTblend_Ta2025'].where(water_mask(ds))).load()
+chl_blend = chl_blend.where(rrs.sel(wl=560).notnull())
+print(l2b['Chla_OWTblend_Ta2025'].attrs['description'])
+print('Chl-a OWT blend, p10/50/90 (mg m-3):', np.nanpercentile(chl_blend, [10, 50, 90]).round(2))
+'''),
         code('''
 show = [('SPM_Nechad10', 'SPM (g m$^{-3}$)', 0, 100), ('TUR_Dogliotti15', 'turbidity (FNU)', 0, 100),
-        ('Kd490_KD2', 'Kd490 (m$^{-1}$)', 0, 1.5), ('Chla_OC2', 'Chl-a OC2 (mg m$^{-3}$)', 0, 10),
-        ('Chla_index_NDCI', 'NDCI (S2 only)', -0.2, 0.3)]
+        ('Kd490_KD2', 'Kd490 (m$^{-1}$)', 0, 1.5), ('Chla_OC2', 'Chl-a OC2 (mg m$^{-3}$)', 0.5, 50),
+        ('Chla_OWTblend_Ta2025', 'Chl-a OWT blend, S2 only (mg m$^{-3}$)', 0.5, 50)]
+LOG = {'Chla_OC2', 'Chla_OWTblend_Ta2025'}   # Chl-a on a log scale
 fig, axs = plt.subplots(1, 5, figsize=(20, 4.6), sharey=True, layout='constrained')
 for ax, (v, lab, lo, hi) in zip(axs, show):
-    src = prod_t if v in prod_t else prod_s2
-    im = ax.imshow(src[v], vmin=lo, vmax=hi, cmap='Spectral_r', interpolation='nearest')
+    img = prod_t[v] if v in prod_t else chl_blend
+    norm = plt.matplotlib.colors.LogNorm(lo, hi) if v in LOG else plt.Normalize(lo, hi)
+    im = ax.imshow(img, norm=norm, cmap='Spectral_r', interpolation='nearest')
     fig.colorbar(im, ax=ax, orientation='horizontal', pad=.03, label=lab)
-    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_xticks([]); ax.set_yticks([]); ax.minorticks_off()
 fig.suptitle(f'T30TWT (Loire) {str(date)[:10]}, 60 m')
 fig.savefig(THUMB_DIR / 'wq_products_trishna.png', dpi=60)
 '''),
         md('''
 OC2 is designed for clear waters: in the turbid plume and estuary its values are not meaningful
-(it is shown because it is the only Chl-a algorithm left with TRISHNA bands). The red-edge NDCI,
-sensitive to Chl-a in turbid/productive waters, is lost.
+(it is shown because it is the only Chl-a algorithm left with TRISHNA bands). The OWT-blended Chl-a of the
+Sentinel-2 L2B product, which relies on the red edge in turbid and productive waters, is lost.
 
 ## 3. From "S2 restricted to TRISHNA bands" to TRISHNA
 On the same S2 values, covered algorithms give identical products. Two effects make TRISHNA
@@ -1073,6 +1088,7 @@ for n, m in models.items():
 fig, axs = plt.subplots(1, 3, figsize=(15, 4))
 for ax, (p, t) in zip(axs, zip(['chl', 'a_cdom', 'spm_norm'], truth)):
     ax.boxplot([res[n][p] for n in models], labels=list(models)); ax.axhline(t, c='r', ls='--')
+    ax.xaxis.set_minor_locator(plt.NullLocator())
     ax.set_yscale('log'); ax.set_title(p)
 pd.concat({n: (100 * (r.iloc[:, :3].quantile([0.16, 0.5, 0.84]) / truth[:3] - 1)).round(0)
            for n, r in res.items()}, axis=1)
@@ -1157,7 +1173,7 @@ for ax, (v, lab) in zip(axs, [('SPM', 'SPM (g m$^{-3}$)'), ('TUR', 'turbidity (F
         q = c[f'{v}_{src}'].quantile([0.1, 0.5, 0.9], dim=['x', 'y'])
         ax.fill_between(c.time, q.sel(quantile=.1), q.sel(quantile=.9), color=col, alpha=.15)
         ax.plot(c.time, q.sel(quantile=.5), 'o-', c=col, label='S2' if src == 's2' else 'TRISHNA-like + noise')
-    ax.set_ylabel(lab); ax.legend(fontsize=8)
+    ax.set_ylabel(lab); ax.legend()
 q = c.NDCI_s2.quantile([0.1, 0.5, 0.9], dim=['x', 'y'])
 axs[3].fill_between(c.time, q.sel(quantile=.1), q.sel(quantile=.9), color='tab:green', alpha=.15)
 axs[3].plot(c.time, q.sel(quantile=.5), 'o-', c='tab:green'); axs[3].set_ylabel('NDCI (S2 only)')
@@ -1175,6 +1191,7 @@ fig, axs = plt.subplots(1, 2, figsize=(16, 4.5), sharey=True)
 for ax, (v, t) in zip(axs, [('owt_s2', 'S2 (8 bands)'), ('owt_trishna', 'TRISHNA-like')]):
     o = occurrence(v); o.index = o.index.strftime('%m-%d')
     o.plot.bar(stacked=True, ax=ax, width=.9, colormap='tab10', legend=ax is axs[1]); ax.set_title(t)
+    ax.xaxis.set_minor_locator(plt.NullLocator())
 axs[1].legend(bbox_to_anchor=(1, 1), title='OWT (merged)'); axs[0].set_ylabel('fraction of water pixels')
 '''),
         md('''
@@ -1184,7 +1201,9 @@ SPM from TRISHNA-like bands for a few dates.'''),
 sel = c.isel(time=np.linspace(0, c.sizes['time'] - 1, 6).astype(int))
 g = sel.SPM_trishna.plot(col='time', col_wrap=6, vmin=0, vmax=60, cmap='Spectral_r', figsize=(18, 6),
                          cbar_kwargs={'label': 'SPM (g m$^{-3}$)'})
-for ax in g.axs.ravel(): ax.set_xticks([]); ax.set_yticks([]); ax.set_xlabel(''); ax.set_ylabel('')
+for ax, t in zip(g.axs.ravel(), sel.time.values):
+    ax.set_xticks([]); ax.set_yticks([]); ax.minorticks_off(); ax.set_xlabel(''); ax.set_ylabel('')
+    ax.set_title(str(t)[:10])
 '''),
         md('''
 ## Take-home messages

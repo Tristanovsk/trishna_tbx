@@ -46,7 +46,8 @@ cannot be retrieved**, and CDOM loses its standard algorithms.
    :alt: Water-quality products with all the S2 bands and with the TRISHNA-like bands
 
    Products of a GRS L2A image of the Loire estuary and plume (T30TWT, 2017-04-12, 60 m) available
-   with the TRISHNA-like bands, and the red-edge NDCI, S2 only (tutorial *Which water quality products
+   with the TRISHNA-like bands, and the OWT-blended Chl-a of the S2 L2B product of GRSl2bgen
+   (``Chla_OWTblend_Ta2025``, red edge, S2 only) (tutorial *Which water quality products
    survive with TRISHNA bands?*). On this image, the band adjustment changes the products by 2-4 %, the
    requirement noise by 5-13 % (35 % for the red/NIR index).
 

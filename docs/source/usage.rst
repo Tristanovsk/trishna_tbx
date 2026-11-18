@@ -157,6 +157,9 @@ The data paths are set in the *Data* cell of each notebook, or with environment 
      - GRS L2A (Zarr pyramid, v3.1.1), tile T30TWT (Loire estuary), 2017-04-12, local S3 bucket
        ``grstbx-s3``
      - products
+   * - ``TRISHNA_TBX_L2B_EXAMPLE``
+     - GRSl2bgen L2B of the same image (``Chla_OWTblend_Ta2025``)
+     - products
    * - ``TRISHNA_TBX_L2A_DIR``
      - GRS L2A, tile T33PVQ (Lake Chad), January-February 2022
      - OWT, datacube

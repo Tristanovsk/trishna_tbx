@@ -35,6 +35,10 @@ L2A_EXAMPLE = os.environ.get('TRISHNA_TBX_L2A_EXAMPLE',
     'S2A_MSIL2AGRS_20170412T110621_N0500_R137_T30TWT_20231111T110836_V3.1.1/'
     'S2A_MSIL2AGRS_20170412T110621_N0500_R137_T30TWT_20231111T110836_V3.1.1.zarr')
 L2A_EXAMPLE_WINDOW = 'y=2700:5490,x=1500:4500'   # 20 m pixels: estuary, plume, Bourgneuf Bay
+L2B_EXAMPLE = os.environ.get('TRISHNA_TBX_L2B_EXAMPLE',   # GRSl2bgen L2B of the same image
+    '/data/satellite/s3/grstbx-s3/sentinel-2/l2b/30TWT/2017/04/12/'
+    'S2A_MSIL2B_20170412T110621_N0500_R137_T30TWT_20231111T110836_V3.1.1/'
+    'S2A_MSIL2B_20170412T110621_N0500_R137_T30TWT_20231111T110836_V3.1.1.zarr')
 AERONET_HYP_DIR = os.environ.get('TRISHNA_TBX_AERONET_HYP', '/DATA/AERONET/OCv3_invRrs/data')
 OUTPUT_DIR = Path(os.environ.get('TRISHNA_TBX_OUTPUT', './output')).resolve()
 # ---------------------------------------------------------------------------------------
@@ -81,7 +85,12 @@ from trishna_tbx import TRISHNA, make_s2
 print('trishna_tbx', trishna_tbx.__version__)
 from pathlib import Path
 THUMB_DIR = Path('../thumbnails').resolve() if Path('../thumbnails').exists() else Path('.').resolve()
-plt.rcParams.update({'figure.dpi': 90, 'font.size': 11})
+# plot style: Times-like serif fonts with LaTeX-style math (STIX, no TeX installation needed),
+# larger fonts, minor ticks on all axes
+plt.rcParams.update({'figure.dpi': 90, 'font.size': 14, 'font.family': 'STIXGeneral',
+                     'mathtext.fontset': 'stix', 'axes.titlesize': 15, 'axes.labelsize': 15,
+                     'legend.fontsize': 12, 'xtick.labelsize': 13, 'ytick.labelsize': 13,
+                     'xtick.minor.visible': True, 'ytick.minor.visible': True})
 '''
 
 

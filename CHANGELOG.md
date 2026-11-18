@@ -8,6 +8,10 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Figure of the products tutorial: OWT-blended Chl-a of the S2 L2B product of GRSl2bgen
+  (`Chla_OWTblend_Ta2025`, variable `L2B_EXAMPLE`) in place of the NDCI.
+- Common plot style of the notebooks: Times-like serif fonts with LaTeX-style math (STIX), larger fonts,
+  minor ticks (off on maps and categorical axes).
 - `io.open_grs_l2a` reads the Zarr pyramids of GRS v3 (argument `level`).
 - Notebook *Which water quality products survive with TRISHNA bands?*: example image replaced by the Loire
   estuary and plume (T30TWT, 2017-04-12, GRS v3.1.1 Zarr pyramid of the local S3 bucket `grstbx-s3`;
