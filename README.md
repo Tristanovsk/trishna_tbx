@@ -1,5 +1,7 @@
 # trishna_tbx
 
+[![Documentation Status](https://readthedocs.org/projects/trishna-tbx/badge/?version=latest)](https://trishna-tbx.readthedocs.io/en/latest/)
+
 Pre-launch toolbox to assess what **TRISHNA VSWIR** can monitor over inland and coastal
 waters compared with Sentinel-2. It covers water-quality parameters, Optical Water Types (OWT)
 and atmospheric water vapour. Context: CNES study *Support aux développements d'un produit

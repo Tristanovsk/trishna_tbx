@@ -130,8 +130,28 @@ latex_elements = {
 \setlength{\emergencystretch}{3em}
 \hbadness=10000
 \vbadness=10000
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
 ''',
 }
+
+
+def setup(app):
+    from docutils import nodes
+    from sphinx.transforms.post_transforms import SphinxPostTransform
+
+    class DropRemoteImages(SphinxPostTransform):
+        """Remote images (the version badge of the notebooks) cannot be embedded in the PDF and EPUB:
+        they are removed for the non-HTML builders, before Sphinx downloads them (priority 100)."""
+        default_priority = 50
+
+        def run(self, **kwargs):
+            if self.app.builder.name in ('html', 'dirhtml', 'singlehtml'):
+                return
+            for node in list(self.document.findall(nodes.image)):
+                if '://' in node.get('uri', ''):
+                    node.parent.remove(node)
+
+    app.add_post_transform(DropRemoteImages)
 
 # -- MyST / notebook rendering -----------------------------------------------
 
