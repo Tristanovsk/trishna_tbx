@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trishna_tbx"
+version = "0.0.1"
+description = "Pre-launch toolbox to assess TRISHNA VSWIR capabilities for water quality, OWT and water vapour vs Sentinel-2"
+requires-python = ">=3.10"
+readme = "README.md"
+authors = [{name = "Tristan Harmel"}]
+dependencies = ["numpy", "xarray", "pandas", "scipy", "openpyxl"]
+
+[project.optional-dependencies]
+# sibling Magellium packages (install in editable mode from their repos)
+full = ["GRSdriver", "GRSprocessor", "GRSl2bgen", "radcalnet_oc", "invRrs", "hGRS"]
+dev = ["pytest", "matplotlib", "jupyterlab", "nbformat", "nbconvert"]
+docs = ["ipython", "sphinx", "sphinx-book-theme", "sphinx-copybutton", "sphinxcontrib-mermaid",
+        "myst-nb", "myst-parser", "linkify-it-py"]
+
+[project.urls]
+Documentation = "https://trishna-tbx.readthedocs.io"
+Repository = "https://github.com/Tristanovsk/trishna_tbx"
+
+[tool.setuptools.packages.find]
+include = ["trishna_tbx*"]

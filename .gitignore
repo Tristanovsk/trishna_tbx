@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+docs/build/
+docs/source/generated/
+# copied from notebooks/ at each documentation build (docs/source/conf.py)
+docs/source/tutorials/
+notebooks/*/output/
+.idea/
+.pytest_cache/
+.ipynb_checkpoints/
