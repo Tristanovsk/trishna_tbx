@@ -7,6 +7,8 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-18
+
 ### Added
 - Figure of the products tutorial: OWT-blended Chl-a of the S2 L2B product of GRSl2bgen
   (`Chla_OWTblend_Ta2025`, variable `L2B_EXAMPLE`) in place of the NDCI.
