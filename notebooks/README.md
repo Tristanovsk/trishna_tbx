@@ -47,7 +47,8 @@ Notes for the gallery:
 |---|---|---|
 | `TRISHNA_TBX_S2_L1C` | S2B L1C 2025-05-26, T31TFJ (Berre lagoon / Gulf of Fos subset) | 01, 02, 04 |
 | `TRISHNA_TBX_CAMS` | CAMS global forecast, 2025-05 | 02, 04 |
-| `TRISHNA_TBX_L2A_DIR` | GRS L2A, T33PVQ (Lake Chad), Jan–Feb 2022 | 05, 06, 08 |
+| `TRISHNA_TBX_L2A_EXAMPLE` | GRS L2A Zarr pyramid (v3.1.1), T30TWT (Loire estuary), 2017-04-12, bucket `grstbx-s3` | 06 |
+| `TRISHNA_TBX_L2A_DIR` | GRS L2A, T33PVQ (Lake Chad), Jan–Feb 2022 | 05, 08 |
 | `TRISHNA_TBX_AERONET_HYP` | invRrs hyperspectral AERONET-OC spectra (optional) | 03 |
 | `TRISHNA_TBX_HYPERNETS` | HYPERNETS BEFR (Berre lagoon) L2A time series, 2021–2023 | 09 |
 | `TRISHNA_TBX_L1C_SUBSETS` | S2 L1C subsets (NetCDF) around BEFR | 09 |

@@ -1,5 +1,6 @@
 """Readers for GRS L2A products (beam/snap-compliant ``Rrs_<wl>`` or stacked ``Rrs``) and CAMS."""
 import glob
+import os
 import re
 
 import numpy as np
@@ -25,17 +26,26 @@ def parse_window(window):
     return out
 
 
-def open_grs_l2a(path, window=None, chunks={}):
-    """Open a GRS L2A product (NetCDF or Zarr) with a stacked ``Rrs`` variable.
+def open_grs_l2a(path, window=None, chunks={}, level=0):
+    """Open a GRS L2A product (NetCDF, Zarr or Zarr pyramid) with a stacked ``Rrs`` variable.
 
     The products of the beam/SNAP profile (one variable ``Rrs_<wl>`` per band) are stacked.
+    For a Zarr pyramid of GRS v3 (levels ``0``, ``1``... in the store, ``0`` at full resolution),
+    the level ``level`` is read.
 
     :param path: NetCDF file or Zarr store
     :param window: pixel window, see :func:`parse_window`
     :param chunks: dask chunks of :func:`xarray.open_dataset`
+    :param level: level of a Zarr pyramid
     :return: :class:`xarray.Dataset` with ``Rrs`` (``wl``, ``y``, ``x``)
     """
-    ds = xr.open_zarr(path) if str(path).endswith('.zarr') else xr.open_dataset(path, chunks=chunks)
+    path = str(path).rstrip('/')
+    if path.endswith('.zarr'):
+        ds = xr.open_zarr(path)
+        if not ds.data_vars and os.path.isdir(os.path.join(path, str(level))):  # pyramid
+            ds = xr.open_zarr(os.path.join(path, str(level)))
+    else:
+        ds = xr.open_dataset(path, chunks=chunks)
     ds = ds.isel(parse_window(window))
     if 'Rrs' not in ds:
         wls = sorted(int(v.split('_')[1]) for v in ds.data_vars if re.fullmatch(r'Rrs_\d+', v))

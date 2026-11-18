@@ -153,9 +153,13 @@ The data paths are set in the *Data* cell of each notebook, or with environment 
    * - ``TRISHNA_TBX_CAMS``
      - CAMS global forecast, 2025-05
      - emulation, GRS
+   * - ``TRISHNA_TBX_L2A_EXAMPLE``
+     - GRS L2A (Zarr pyramid, v3.1.1), tile T30TWT (Loire estuary), 2017-04-12, local S3 bucket
+       ``grstbx-s3``
+     - products
    * - ``TRISHNA_TBX_L2A_DIR``
      - GRS L2A, tile T33PVQ (Lake Chad), January-February 2022
-     - OWT, products, datacube
+     - OWT, datacube
    * - ``TRISHNA_TBX_AERONET_HYP``
      - invRrs hyperspectral AERONET-OC spectra
      - TOA simulations

@@ -28,6 +28,13 @@ L2A_DIR = os.environ.get('TRISHNA_TBX_L2A_DIR',
 L2A_TILE = 'T33PVQ'                      # Lake Chad (southern pool)
 L2A_WINDOW = 'y=0:3600,x=0:960'          # 20 m pixel window with water
 L2A_DATE = '2022-02-12'                  # date used by the single-image tutorials
+# single-image example of the products tutorial: Loire estuary and plume, GRS v3.1.1 (Zarr pyramid,
+# local S3 bucket grstbx-s3 of grstbx, read here through its folder)
+L2A_EXAMPLE = os.environ.get('TRISHNA_TBX_L2A_EXAMPLE',
+    '/data/satellite/s3/grstbx-s3/sentinel-2/l2a/30TWT/2017/04/12/'
+    'S2A_MSIL2AGRS_20170412T110621_N0500_R137_T30TWT_20231111T110836_V3.1.1/'
+    'S2A_MSIL2AGRS_20170412T110621_N0500_R137_T30TWT_20231111T110836_V3.1.1.zarr')
+L2A_EXAMPLE_WINDOW = 'y=2700:5490,x=1500:4500'   # 20 m pixels: estuary, plume, Bourgneuf Bay
 AERONET_HYP_DIR = os.environ.get('TRISHNA_TBX_AERONET_HYP', '/DATA/AERONET/OCv3_invRrs/data')
 OUTPUT_DIR = Path(os.environ.get('TRISHNA_TBX_OUTPUT', './output')).resolve()
 # ---------------------------------------------------------------------------------------

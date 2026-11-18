@@ -8,6 +8,11 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- `io.open_grs_l2a` reads the Zarr pyramids of GRS v3 (argument `level`).
+- Notebook *Which water quality products survive with TRISHNA bands?*: example image replaced by the Loire
+  estuary and plume (T30TWT, 2017-04-12, GRS v3.1.1 Zarr pyramid of the local S3 bucket `grstbx-s3`;
+  variables `L2A_EXAMPLE`, `L2A_EXAMPLE_WINDOW`), with take-home messages updated (band adjustment
+  2-4 %, noise 5-13 % on this image).
 - Read the Docs documentation (`docs/source`, `.readthedocs.yaml`): user guide (installation, usage,
   methods, pre-launch assessment, processing chain), the VRE gallery notebooks as tutorials, API
   reference, roadmap and changelog. `docs` extra in `pyproject.toml`.

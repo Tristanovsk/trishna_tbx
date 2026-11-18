@@ -885,8 +885,18 @@ cov = algorithms.coverage([s2, TRISHNA])
 cov.style.map(lambda v: 'background-color: #c8e6c9' if v is True else
               ('background-color: #ffcdd2' if v is False else ''))
 '''),
-        md('## 2. Products from a Sentinel-2 image'),
-        code(L2A_LOAD),
+        md('''
+## 2. Products from a Sentinel-2 image
+Example: the Loire estuary and plume (tile T30TWT, 2017-04-12), from clear coastal waters to the
+very turbid estuary. The GRS L2A product is a Zarr pyramid: level 0 is the 20 m grid.'''),
+        code('''
+from trishna_tbx.io import open_grs_l2a, water_mask, to_60m
+ds = open_grs_l2a(L2A_EXAMPLE, L2A_EXAMPLE_WINDOW, level=0)
+date = ds.time.values
+rrs = to_60m(ds.Rrs.where(water_mask(ds))).load()
+rrs = rrs.where((rrs.sel(wl=[490, 560, 665]) > 0).all('wl'))
+print(str(date)[:10], L2A_EXAMPLE.split('/')[-1], '| 60 m water pixels:', int(rrs.sel(wl=560).notnull().sum()))
+'''),
         code('''
 S2T = s2.subset(['B2', 'B3', 'B4', 'B8A'], 'S2-as-TRISHNA')
 prod_s2 = algorithms.run_all(rrs, s2)
@@ -896,21 +906,21 @@ print('S2 only :', sorted(set(prod_s2) - set(prod_t)))
 print('both    :', sorted(prod_t))
 '''),
         code('''
-show = [('SPM_Nechad10', 'SPM (g m$^{-3}$)', 0, 60), ('TUR_Dogliotti15', 'turbidity (FNU)', 0, 40),
-        ('Kd490_KD2', 'Kd490 (m$^{-1}$)', 0, 2), ('Chla_OC2', 'Chl-a OC2 (mg m$^{-3}$)', 0, 20),
+show = [('SPM_Nechad10', 'SPM (g m$^{-3}$)', 0, 100), ('TUR_Dogliotti15', 'turbidity (FNU)', 0, 100),
+        ('Kd490_KD2', 'Kd490 (m$^{-1}$)', 0, 1.5), ('Chla_OC2', 'Chl-a OC2 (mg m$^{-3}$)', 0, 10),
         ('Chla_index_NDCI', 'NDCI (S2 only)', -0.2, 0.3)]
-fig, axs = plt.subplots(1, 5, figsize=(20, 7), sharey=True)
+fig, axs = plt.subplots(1, 5, figsize=(20, 4.6), sharey=True, layout='constrained')
 for ax, (v, lab, lo, hi) in zip(axs, show):
     src = prod_t if v in prod_t else prod_s2
     im = ax.imshow(src[v], vmin=lo, vmax=hi, cmap='Spectral_r', interpolation='nearest')
     fig.colorbar(im, ax=ax, orientation='horizontal', pad=.03, label=lab)
     ax.set_xticks([]); ax.set_yticks([])
-fig.suptitle(f'{L2A_TILE} {str(date)[:10]}, 60 m')
+fig.suptitle(f'T30TWT (Loire) {str(date)[:10]}, 60 m')
 fig.savefig(THUMB_DIR / 'wq_products_trishna.png', dpi=60)
 '''),
         md('''
-OC2 is designed for clear waters: in these turbid waters its values are not meaningful (it is
-shown because it is the only Chl-a algorithm left with TRISHNA bands). The red-edge NDCI,
+OC2 is designed for clear waters: in the turbid plume and estuary its values are not meaningful
+(it is shown because it is the only Chl-a algorithm left with TRISHNA bands). The red-edge NDCI,
 sensitive to Chl-a in turbid/productive waters, is lost.
 
 ## 3. From "S2 restricted to TRISHNA bands" to TRISHNA
@@ -956,11 +966,14 @@ fig.tight_layout()
   Kd_PAR), OWT, and blue/green Chl-a in clear waters only.
 - Lost: red-edge Chl-a (productive/eutrophic waters), CDOM, QAA-based IOPs and Secchi depth
   as implemented (443 nm); a QAA variant using 485 nm has to be developed.
-- The band differences are not negligible: TRISHNA Red (670/60 nm) is wider and redder than
-  S2 B4, so in very turbid waters (OWT 5b) it sees ~15 % more signal, and SPM/turbidity
-  increase accordingly; blue-band products (OC2, KD2) change by 20-30 %. Algorithm
-  coefficients must be re-tuned for the TRISHNA bands (`algorithms.retune_ocx`, simulations).
-- Requirement noise adds scatter but, at 60 m, less than the band effect.'''),
+- The effect of the band differences depends on the water type. On this coastal image (Loire
+  plume, mostly moderately turbid), the OWT-dependent adjustment changes the products by only
+  2-4 % (8 % for the red/NIR index). It is larger in very turbid waters (OWT 5b), where TRISHNA
+  Red (670/60 nm, wider and redder than S2 B4) sees up to ~15 % more signal, and on the Lake Chad
+  time series (*Time series of TRISHNA-like water products*: SPM +7 to +16 %, Kd490 +20 to +40 %).
+  Algorithm coefficients must be re-tuned for the TRISHNA bands (`algorithms.retune_ocx`, simulations).
+- Here the requirement noise matters more than the band adjustment: 5-6 % for SPM, turbidity and
+  Kd_PAR, 11-13 % for Kd490 and OC2, 35 % for the red/NIR index (dark NIR).'''),
     ]
 
 

@@ -45,8 +45,10 @@ cannot be retrieved**, and CDOM loses its standard algorithms.
    :width: 100%
    :alt: Water-quality products with all the S2 bands and with the TRISHNA-like bands
 
-   Products of a GRS L2A image (Lake Chad) with all the S2 bands and with the TRISHNA-like bands
-   (tutorial *Which water quality products survive with TRISHNA bands?*).
+   Products of a GRS L2A image of the Loire estuary and plume (T30TWT, 2017-04-12, 60 m) available
+   with the TRISHNA-like bands, and the red-edge NDCI, S2 only (tutorial *Which water quality products
+   survive with TRISHNA bands?*). On this image, the band adjustment changes the products by 2-4 %, the
+   requirement noise by 5-13 % (35 % for the red/NIR index).
 
 Optical water types
 -------------------
@@ -95,7 +97,8 @@ Band adjustment from Sentinel-2
 - **Blue needs ×1.28 (clear) to ×0.84 (turbid)**, Red up to ×1.17 in very turbid waters (type 5b): the
   factors depend on the water type. Emulating TRISHNA by dropping S2 bands is biased;
   ``emulate.owt_band_adjustment`` applies factors by type.
-- On Lake Chad (20 dates), with the S2 coefficients of the algorithms, the adjustment raises
+- The effect depends on the water type: 2-4 % on the products of the Loire plume (mostly
+  moderately turbid), more in very turbid waters. On Lake Chad (20 dates), with the S2 coefficients of the algorithms, the adjustment raises
   SPM/turbidity by 7-16 % and :math:`K_d(490)` by 20-40 %: the algorithms have to be re-tuned for
   TRISHNA before merging S2 and TRISHNA time series.
 - In situ (HYPERNETS, Berre lagoon), the TRISHNA/S2 ratios are 0.92 (Blue), 0.94 (Green), 1.00 (Red)
