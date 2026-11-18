@@ -7,6 +7,10 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+- PDF and EPUB of the documentation (`formats: all` of Read the Docs): Unicode minus sign declared for
+  pdflatex, remote images (version badge of the notebooks) left out of the non-HTML builds.
+
 ## [0.1.0] - 2026-11-18
 
 ### Added
