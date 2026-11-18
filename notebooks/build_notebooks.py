@@ -1034,9 +1034,10 @@ for col, n in enumerate(models):
         im = ax.pcolormesh(spm, chl, out[n][row], norm=plt.matplotlib.colors.LogNorm(0.05, 10), cmap='RdYlGn_r')
         cs = ax.contour(spm, chl, out[n][row], levels=[0.3, 1.], colors='k', linewidths=1)
         ax.clabel(cs, fmt='%.1f'); ax.set_xscale('log'); ax.set_yscale('log')
-        ax.set_title(f'{n}: relative std of {p} (a_cdom={A_CDOM})')
+        ax.set_title(f'{n}: {p}')
 for ax in axs[-1]: ax.set_xlabel('SPM (g m$^{-3}$)')
 for ax in axs[:, 0]: ax.set_ylabel('Chl-a (mg m$^{-3}$)')
+fig.suptitle(f'Relative standard deviation of the retrieved Chl-a and SPM ($a_{{cdom}}(440)$ = {A_CDOM} m$^{{-1}}$)')
 fig.colorbar(im, ax=axs, shrink=.6, label='relative standard deviation')
 '''),
         md('''
