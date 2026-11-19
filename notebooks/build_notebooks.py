@@ -921,23 +921,10 @@ print('Chl-a OWT blend, p10/50/90 (mg m-3):', np.nanpercentile(chl_blend, [10, 5
         code('''
 show = [('SPM_Nechad10', 'SPM (g m$^{-3}$)', 0, 100), ('TUR_Dogliotti15', 'turbidity (FNU)', 0, 100),
         ('Kd490_KD2', 'Kd490 (m$^{-1}$)', 0, 1.5), ('Chla_OC2', 'Chl-a OC2 (mg m$^{-3}$)', 0.5, 50),
-        ('Chla_OWTblend_Ta2025', 'Chl-a OWT blend, S2 only (mg m$^{-3}$)', 0.5, 50)]
+        ('Chla_OWTblend_Ta2025', 'Chl-a (mg m$^{-3}$)', 0.5, 50)]
 LOG = {'Chla_OC2', 'Chla_OWTblend_Ta2025'}   # Chl-a on a log scale
-fig, axs = plt.subplots(1, 5, figsize=(20, 4.6), sharey=True, layout='constrained')
-for ax, (v, lab, lo, hi) in zip(axs, show):
-    img = prod_t[v] if v in prod_t else chl_blend
-    norm = plt.matplotlib.colors.LogNorm(lo, hi) if v in LOG else plt.Normalize(lo, hi)
-    im = ax.imshow(img, norm=norm, cmap='Spectral_r', interpolation='nearest')
-    fig.colorbar(im, ax=ax, orientation='horizontal', pad=.03, label=lab)
-    ax.set_xticks([]); ax.set_yticks([]); ax.minorticks_off()
-fig.suptitle(f'T30TWT (Loire) {str(date)[:10]}, 60 m')
-fig.savefig(THUMB_DIR / 'wq_products_trishna.png', dpi=60)
 '''),
         md('''
-OC2 is designed for clear waters: in the turbid plume and estuary its values are not meaningful
-(it is shown because it is the only Chl-a algorithm left with TRISHNA bands). The OWT-blended Chl-a of the
-Sentinel-2 L2B product, which relies on the red edge in turbid and productive waters, is lost.
-
 ## 3. From "S2 restricted to TRISHNA bands" to TRISHNA
 On the same S2 values, covered algorithms give identical products. Two effects make TRISHNA
 different: (1) the band responses (adjustment factors, which depend on the water type),
@@ -966,6 +953,40 @@ for v in prod_t:
                '+ noise: MdAPD (%)': rel(c)}
 pd.DataFrame(rows).T.round(2)
 '''),
+        md('''
+The figure compares, pixel by pixel, the Sentinel-2 products (top row) with the TRISHNA-like products
+(middle row: TRISHNA-like bands with the OWT-dependent band adjustment and the requirement noise) and gives
+the relative difference (bottom row). The OWT-blended Chl-a of the Sentinel-2 L2B product needs the red
+edge: with TRISHNA bands the only Chl-a left is OC2, compared with it in the last column.'''),
+        code('''
+fig, axs = plt.subplots(3, 5, figsize=(20, 13), sharex=True, sharey=True, layout='constrained')
+s2_img = {**prod_s2, 'Chla_OWTblend_Ta2025': chl_blend}
+tri_img = {**prod_noisy, 'Chla_OWTblend_Ta2025': prod_noisy['Chla_OC2']}   # OC2: only Chl-a with TRISHNA
+for j, (v, lab, lo, hi) in enumerate(show):
+    norm = plt.matplotlib.colors.LogNorm(lo, hi) if v in LOG else plt.Normalize(lo, hi)
+    for i, img in enumerate((s2_img[v], tri_img[v])):
+        im = axs[i, j].imshow(img, norm=norm, cmap='Spectral_r', interpolation='nearest')
+    fig.colorbar(im, ax=axs[:2, j], orientation='horizontal', pad=.02, shrink=.9, label=lab)
+    d = 100 * (tri_img[v] - s2_img[v]) / s2_img[v]
+    dmax = 100 if v == 'Chla_OWTblend_Ta2025' else 30
+    im = axs[2, j].imshow(d, vmin=-dmax, vmax=dmax, cmap='RdBu_r', interpolation='nearest')
+    fig.colorbar(im, ax=axs[2, j], orientation='horizontal', pad=.02, shrink=.9,
+                 label='TRISHNA $-$ S2 (%)')
+    print(f'{v:22s} median rel. diff. {float(np.nanmedian(d)):6.1f} %, MdAPD {float(np.nanmedian(np.abs(d))):5.1f} %')
+for ax in axs.flat:
+    ax.set_xticks([]); ax.set_yticks([]); ax.minorticks_off()
+axs[0, 4].set_title('OWT blend (S2 L2B)')
+axs[1, 4].set_title('OC2 (only Chl-a with TRISHNA)')
+axs[2, 4].set_title('OC2 TRISHNA vs OWT blend S2')
+for i, t in enumerate(('Sentinel-2', 'TRISHNA-like', 'difference')):
+    axs[i, 0].set_ylabel(t, fontsize=17)
+fig.suptitle(f'T30TWT (Loire) {str(date)[:10]}, 60 m')
+fig.savefig(THUMB_DIR / 'wq_products_trishna.png', dpi=60)
+'''),
+        md('''
+OC2 is designed for clear waters: in the turbid plume and estuary its values are not meaningful
+(it is shown because it is the only Chl-a algorithm left with TRISHNA bands). The OWT-blended Chl-a of the
+Sentinel-2 L2B product, which relies on the red edge in turbid and productive waters, is lost.'''),
         code('''
 fig, axs = plt.subplots(1, 3, figsize=(16, 4.8))
 for ax, (v, lab, lo, hi) in zip(axs, show[:3]):

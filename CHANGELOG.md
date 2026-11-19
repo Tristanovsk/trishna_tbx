@@ -7,6 +7,11 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+- Products figure of the tutorial *Which water quality products survive with TRISHNA bands?* (Figure 4 of
+  the report, assessment page of the docs): Sentinel-2, TRISHNA-like (band adjustment and noise) and
+  relative difference rows; moved after the computation of the TRISHNA-like products.
+
 ## [0.1.1] - 2026-11-18
 
 ### Fixed

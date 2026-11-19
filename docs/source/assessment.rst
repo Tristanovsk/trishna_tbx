@@ -43,13 +43,16 @@ cannot be retrieved**, and CDOM loses its standard algorithms.
 
 .. figure:: _static/wq_products_trishna.png
    :width: 100%
-   :alt: Water-quality products with all the S2 bands and with the TRISHNA-like bands
+   :alt: Water-quality products with the S2 bands, with the TRISHNA-like bands, and their difference
 
-   Products of a GRS L2A image of the Loire estuary and plume (T30TWT, 2017-04-12, 60 m) available
-   with the TRISHNA-like bands, and the OWT-blended Chl-a of the S2 L2B product of GRSl2bgen
-   (``Chla_OWTblend_Ta2025``, red edge, S2 only) (tutorial *Which water quality products
-   survive with TRISHNA bands?*). On this image, the band adjustment changes the products by 2-4 %, the
-   requirement noise by 5-13 % (35 % for the red/NIR index).
+   Products of a GRS L2A image of the Loire estuary and plume (T30TWT, 2017-04-12, 60 m) (tutorial
+   *Which water quality products survive with TRISHNA bands?*). Top: Sentinel-2 bands (SPM, turbidity,
+   :math:`K_d(490)`, OC2 Chl-a, and the OWT-blended Chl-a of the S2 L2B product of GRSl2bgen,
+   ``Chla_OWTblend_Ta2025``). Middle: TRISHNA-like bands (OWT-dependent band adjustment and requirement
+   noise); the OWT-blended Chl-a needs the red edge and is replaced by OC2, the only Chl-a left. Bottom:
+   relative difference TRISHNA-like - S2 (last column: OC2 TRISHNA vs OWT blend S2). SPM and turbidity
+   are unbiased (median difference below 0.5 %, noise 5-6 %), :math:`K_d(490)` and OC2 are biased high by
+   9-11 %; OC2 underestimates the OWT-blended Chl-a by more than 50 % in the turbid estuary and plume.
 
 Optical water types
 -------------------
